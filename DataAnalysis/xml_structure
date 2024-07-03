@@ -1,0 +1,24 @@
+The below is the structure of the xml files shared by RegGenome for this project
+Due to confidentiality, the files are not made available.
+
+
+xml
+document id=, annotation=, title= // info about the pdf document
+    pages   // pages of the pdf document
+        page index= // one page of the pdf
+            blocks // as defined/extracted by pymupdf
+                block
+                    text
+                    tags
+                        tag
+            annotation  // as defined by human annotators
+                region id, x, y, width, height
+                    text
+                    tags
+                        tag
+
+
+Note:
+- typically, only the regions are annotated with text, as they are created when human annotators manually identify regions in the pdf file, capturing the relevant text and annotate them
+- in this data format: block structure of document (as given/created by pymupdf) is labelled with the same tag based on Jaccard similarity
+(i.e. the text elements of both are compared and if the block's text passes a certain similarity value threshold when compare with the region's text, it is assigned the same label)

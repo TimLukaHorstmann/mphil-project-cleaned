@@ -1,0 +1,70 @@
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Helvetica, 'Times New Roman', sans-serif;
+    background-color: white;
+    color: black;
+}
+.table-title th{
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.table-header th {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: white;
+    border-right: 2px solid black;
+}
+
+.full-text {
+    width: auto;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    text-align: justify;
+    padding: 10px;
+}
+
+.snippets, .regions {
+    min-width: 20%;
+    width: auto;
+}
+
+strong{
+    text-decoration: underline;
+}
+th {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: white;
+    border-right: 2px solid black;
+}
+td {
+    text-align: justify;
+    padding: 8px;
+    border: 1px solid white;
+}
+tr:nth-child(even) {
+    background-color: white;
+}
+.block-odd {
+    color: blue;
+}
+.block-even {
+    color: green;
+}
+.snippet-odd {
+    background-color: yellow;
+}
+.snippet-even {
+    background-color: orange;
+}
+img {
+    margin-right: 10px;
+    max-height: 1000px; 
+    object-fit: contain; 
+    object-position: top;
+}

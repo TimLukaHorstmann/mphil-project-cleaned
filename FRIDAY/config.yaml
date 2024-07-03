@@ -1,0 +1,95 @@
+# Model Configuration
+general:
+  DEBUG: False # toggle debugging functionality in some code segments
+  UNIQUE_TAG: # if provided, no unique ID will be generated, but rather the given one will be used
+  MODEL: roberta-base # choose model architecture to be loaded from HuggingFace here
+  # saibo/legal-roberta-base (https://huggingface.co/saibo/legal-roberta-base)
+  # lexlms/legal-roberta-base (https://huggingface.co/lexlms/legal-roberta-base) --> note: this model uses a different tokenizer and would thus also need a new data_dict containing data tokenized with its tokenizer
+  # roberta-base (https://huggingface.co/FacebookAI/roberta-base)
+  # roberta-large (https://huggingface.co/FacebookAI/roberta-large)
+  # distilbert/distilroberta-base (https://huggingface.co/distilbert/distilroberta-base)
+  
+  DATA_SIZE: 1149 # define data size to work with here (in most cases, the entire dataset is automatically used)
+
+  # Data dict file paths (i.e. nested dictionaries containing the data for each domain (regions, blocks, baseline snippets, metadata, etc.) are specified below
+  # Note: as the data used in this study is confidential, the data_dict files are not provided in this repository
+  DATA_DICT_FILE_PATH:
+    DOMAIN: "AML" # choose theme to work with here
+    AML: 'path/to/aml_data_dict.pkl'
+    CYBER_I: 'path/to/aml_data_dict.pkl'
+    CYBER_II: 'path/to/aml_data_dict.pkl'
+
+  DATA_PATH: 'Data' # define path to data storage here (e.g. 'Data' in this repository)
+  USE_MULTIPROCESSING: True # leverage multiprocessing if possible
+  SPLITS_JSON: './document_splits_for_datasets-1149.json' # path to splits json file containing the centralised definitions for the dataset split into training, validation, and test sets
+  TRAIN_SIZE: 0.7 # training set size
+  VAL_SIZE: 0.15 # validation set size (test size = 1 - train_size - val_size)
+
+  SPLIT_BASE: "blocks" # define whether to split pages leveraging the division of a page into blcoks or not (options: "blocks" or str != "blocks")
+  SENTENCE_SPLITTER_MODEL: "transformer" # SBD component to use for sentence splitting (options: "nltk", "spacy", "transformer"), see preprocessing/custom_sentence_tokenizer.py for more details
+
+# settings for hyperparameter optimisation with Optuna
+# Sections 5.2.3 and 5.3.3 in report
+hpo:
+  IS_HPO_RUN: False # toggle hyperparameter optimisation
+  N_TRIALS: 25 # define number of trials to run
+  STUDY_NAME: # name of the study to be created
+  DB_FILE: # name of the db file to be created
+  HPO_DESC: "[1,2], total_loss, Median Pruning" # description of the hyperparameter optimisation run
+  HIER_LABELS_LEVELS_SEARCH_SPACE: [1,2]  # search space for list of levels from detailed ontology labels to predict as auxiliary objective, all combinations will be explored
+  LOSS_TO_OPTIMISE: "total_loss" # loss to optimise during HPO, options: "total_loss", "bio_loss" (i.e. main objective) or "model_pk_value_segeval" (i.e. optimisation towards pk metric) (default: bio_loss)
+  
+# Weights and Biases (wandb) Configuration (https://wandb.ai/site)
+wandb:
+  WANDB_PROJECT: 'mphil-project' # definition of wandb project
+  WANDB_GROUP: 'SENTENCE' # group to track run in
+  RUN_ID: # if provided, continue existing session (for example in case of continuation of training)
+
+# BASELINE MODEL (Section 5.1 in report)
+baseline:
+  USE_GRAPHSEG: False # toggle usage of GraphSeg or Blocks for baseline model (i.e. GraphSeg: True, Blocks: False)
+  PREPROCESS: False # toggle preprocessing of data for baseline model (i.e. dataset creation)
+  EPOCHS: 3 # define number of epochs for training
+  BATCH_SIZE: 128 # define batch size for training
+  PRETRAINED_MODEL: xb6pcE # # unique model ID --> Blocks: xb6pcE  GraphSeg: 4wvN23
+  CHECKPOINT: # define checkpoint if relevant
+
+# SENTENCE LEVEL MODEL (Section 5.2 in report)
+sentence_level_model:
+  SENTENCE_TRANSFORMER_MODEL: 'sentence-transformers/all-MiniLM-L12-v2' # define sentence transformer model to be used for the generation of sentene embeddings (see https://www.sbert.net/docs/sentence_transformer/pretrained_models.html)
+  SENTENCE_MODEL_IS_BINARY: True # choose if binary or BIO labelling is used for main objective
+  SENTENCE_MODEL_ARCHITECTURE: "Transformer" # choose second-level encoder network (options: "BiLSTM", "BiLSTM_CRF", "Transformer")
+  DATASET: Model/datasets/sentence-level/<huggingface_dataset_dict_for_sentence-level_model.hf> # path to dataset dictionary for sentence-level model
+  PRETRAINED_MODEL: oiHQRN # unique model ID
+  CHECKPOINT: # path to checkpoint if relevant for continuation of training
+  EPOCHS: 25 # define number of epochs for training
+  EARLY_STOPPING_PATIENCE: 5 # 3 for token, 5 for sentence
+  BATCH_SIZE: 512 # batch size for model training
+  USE_POS_ENCODING: False # add additional positional encoding to the second-level transformer
+  ALPHA: 0.8998082135980864 # weight to give to normal loss vs. detailed loss
+  HIER_LABELS_LEVELS: [1] # list of levels from detailed ontology labels to predict as auxiliary objective (e.g. [], [1], [1,2], [2,3], [0,1,2,3])
+  DETAILED_LABEL_WEIGHTS: [0.5475182562209353] # weight for each level --> must correspond to the levels in HIER_LABELS_LEVELS
+
+# TOKEN LEVEL MODEL (Section 5.3 in report)
+token_level_model:
+  DEFAULT_MODEL: False # toggle usage of default model via HF for higher efficiency (only used for debugging purposes, as the default model does not include the custom classification head)
+  SLIDING_WINDOW_OVERLAP: 256 # number of overlapping tokens for token level windows of pages
+  RETOKENIZATION_NEEDED: False # define if retokenization is needed for dataset prep (otherwise: tokens should already be correctly provided in data_dict)
+  DATASET: Model/datasets/token-level/<huggingface_dataset_dict_for_token-level_model.hf> # path to dataset dictionary for token-level model (depending on whether roberta-based model or different architectures are used different datasets are needed)
+  # Examples used in this work (not included in this repostitory due to confidentiality reasons):
+  # Model/datasets/token-level/dataset_dict_1149-docs_roberta-base-model_win256-24-04.hf
+  # Model/datasets/token-level/dataset_dict_1149-docs_lexlms-legal-roberta-base-model_win256-24-04.hf
+  # Model/datasets/token-level/dataset_dict_1149-docs_saibo-legal-roberta-base-model_win256-11-04.hf
+  PRETRAINED_MODEL: or6jqv # unique model ID --> dCJaOf (token-base-main), bQqNId (token-base-main+auxil.), 0K5pRn (token-distilroberta-main), VF6rm6 (token-large-main), or6jqv (token-base-pk-main), z1qKSA (token-level model with extended auxiliary objective, level: [1,2]) (Note: due to size constraints, we only provide the saved models for the last two models in the list)
+  CHECKPOINT: # path to checkpoint if relevant for continuation of training
+  EPOCHS: 15 # define number of epochs for training
+  EARLY_STOPPING_PATIENCE: 4 # 3 for token, 5 for sentence
+  BATCH_SIZE: 128  # batch size for model training
+  ALPHA: 0.65 # weight to give to normal loss vs. detailed loss
+  HIER_LABELS_LEVELS: [] # list of levels from detailed ontology labels to predict as auxiliary objective (e.g. [], [1], [1,2], [2,3], [0,1,2,3])
+  DETAILED_LABEL_WEIGHTS: [] # weight for each level --> must correspond to the levels in HIER_LABELS_LEVELS
+
+# ENSEMBLE (Section 5.5 in report)
+ensemble:
+  TOKEN_LEVEL_MODEL: or6jqv # pre-trained token-level model to be used in ensemble
+  SENTENCE_LEVEL_MODEL: oiHQRN # pre-trained sentence-level model to be used in ensemble

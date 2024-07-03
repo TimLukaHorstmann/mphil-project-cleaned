@@ -1,0 +1,49 @@
+Test Set Evaluation Results:
+eval_loss: 0.8003551363945007
+
+eval_normal_labels_metrics:
+{
+'cross_entropy_loss': 0.41854533553123474
+, 'precision': 0.7450200849816477
+, 'recall': 0.9255944872151243
+, 'f1': 0.8255482682840314
+, 'accuracy': 0.8858901939988688
+, 'cohen_kappa': 0.7401486005630533
+, 'model_pk': 0.006727384516473018
+, 'model_pk_value_segeval': 0.10541919016688624
+, 'model_windowdiff': 0.6402827258188656
+, 'model_windowdiff_value_segeval': 0.15752762437901768
+, 'random_baseline_accuracy': 0.5002875396186099
+, 'random_baseline_precision': 0.2920038226533108
+, 'random_baseline_recall': 0.5005517425931951
+, 'random_baseline_f1': 0.3688398105627545
+, 'random_baseline_pk': 0.375576440068596
+, 'random_pk_value_segeval': 0.4999439034742256
+, 'random_baseline_windowdiff': 63.23811077902266
+, 'random_windowdiff_value_segeval': 0.4999439034742256
+}
+
+
+eval_hierarchical_labels_metrics:
+{
+    'level_1':
+    {'cross_entropy_loss': 1.4253383874893188
+    , 'precision': 0.5951899009837123
+    , 'recall': 0.5891009238091965
+    , 'f1': 0.5831115955409264
+    , 'accuracy': 0.6878188566116044
+    , 'cohen_kappa': 0.6573163077173356}
+    , 'level_2': 
+    {'cross_entropy_loss': 2.106858253479004
+    , 'precision': 0.35524099903525974
+    , 'recall': 0.35379738511008846
+    , 'f1': 0.3276761857894182
+    , 'accuracy': 0.5437424597977005
+    , 'cohen_kappa': 0.5190937839586733
+    }
+}
+
+
+eval_runtime: 1034.9177
+eval_samples_per_second: 15.091
+eval_steps_per_second: 0.119

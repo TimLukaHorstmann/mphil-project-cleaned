@@ -1,0 +1,6 @@
+For this project, this folder contained two files:
+1. "node_constants.py": script containing the defined regular expressions to be used by the snippeting algorithm for the identification of the "character type" of a page
+2. "note_utils.py": script containing RegGenome's snippeting algorithm. Consumes "node_constants.py"
+
+Since these two pieces of code are the property of RegGenome and were only made available for use in the context of this work, this code cannot be included here.
+Please refer to Section 3.2 of the report for more details on the snippeting algorithm and its functionality.
